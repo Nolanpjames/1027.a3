@@ -21,38 +21,46 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
         }
         	//takes in an element of generic type and adds to rear of queue
         public void enqueue(T element) {
-                if (count == queue.length)
-                        expandCapacity();
-                	rear = (rear + 1) % queue.length;
-                    queue[rear] = element;
-                    count++;
+        	 if (size() == queue.length)
+        	//expand if full
+                 expandCapacity();
+         if (rear == queue.length-1) {
+                 queue[rear] = element;
+                 rear = queue.length;
+         }
+         else {
+        	 //increase rear to return to zero if too long
+                 rear = (rear + 1) % queue.length;
+                 queue[rear - 1] = element;
+         }
+         count++;
+ }
        
-           }
+
         public T dequeue() throws EmptyCollectionException {
-        	 if(isEmpty())
-        	//throws exception if empty
-                 throw new EmptyCollectionException("The Queue is already empty.");
-        	 //T element stores element being removed
-               T element;
-             //first and last element are same if front == 0  
-             if(front == 0) 
-            	 element = queue[queue.length - 1];
-             else {
-            	 element = queue[front-1];
-             }
-             //reset queue if first and last elements are the same so we have to reset them
-             if(count == 1) {
-            	front = 1;
-            	rear = 0;
-             }
-             else {
-            	 front = (front + 1) % queue.length;
-             }
-             //update count and return element
-             count--;
-             return element;
+        	if(isEmpty())
+        		//throws exception if empty
+        		throw new EmptyCollectionException("The Queue is already empty.");
+        	//T element stores element being removed
+        	T element;
+        	//first and last element are same if front == 0  
+        	if(front == 0) 
+        		element = queue[queue.length - 1];
+        	else {
+        		element = queue[front-1];
+        	}
+        	//reset queue if first and last elements are the same so we have to reset them
+        	if(count == 1) {
+        		front = 1;
+        		rear = 0;
+        	}
+        	else {
+        		front = (front + 1) % queue.length;
+        	}
+        	//update count and return element
+        	count--;
+        	return element;
         }
-            	 
 
         public T first() throws EmptyCollectionException {
                 if (isEmpty())
