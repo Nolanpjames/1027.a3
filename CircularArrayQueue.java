@@ -29,7 +29,6 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
                  rear = queue.length;
          }
          else {
-        	 //increase rear to return to zero if too long
                  rear = (rear + 1) % queue.length;
                  queue[rear - 1] = element;
          }
@@ -37,36 +36,36 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
  }
        
 
-        public T dequeue() throws EmptyCollectionException {
-        	if(isEmpty())
-        		//throws exception if empty
-        		throw new EmptyCollectionException("The Queue is already empty.");
-        	//T element stores element being removed
-        	T element;
-        	//first and last element are same if front == 0  
-        	if(front == 0) 
-        		element = queue[queue.length - 1];
-        	else {
-        		element = queue[front-1];
-        	}
-        	//reset queue if first and last elements are the same so we have to reset them
-        	if(count == 1) {
-        		front = 1;
-        		rear = 0;
-        	}
-        	else {
-        		front = (front + 1) % queue.length;
-        	}
-        	//update count and return element
-        	count--;
-        	return element;
-        }
+        public T dequeue() throws EmptyCollectionException
+        {
+           if (isEmpty())
+              throw new EmptyCollectionException ("queue");
 
-        public T first() throws EmptyCollectionException {
-                if (isEmpty())
-                        throw new EmptyCollectionException("Circular Queue");
-                return queue[front-1];
+           T result = queue[0];
+
+           rear--;
+
+           // shift the elements 
+           for (int scan=0; scan < rear; scan++)
+              queue[scan] = queue[scan+1];
+
+      
+           queue[rear] = null;
+      
+           return result;
         }
+        
+        public T first() throws EmptyCollectionException
+        {
+            if (isEmpty()) {
+            	throw new EmptyCollectionException("attempting to access empty LinearArrayQueue");
+            }
+            if (front-1>=0) 
+            	return queue[front - 1];
+            else {
+            	return queue[queue.length - 1];
+            }
+         }
         	//returns true if the queue is empty, and false otherwise
         public boolean isEmpty() {
         	if(count==0)    
