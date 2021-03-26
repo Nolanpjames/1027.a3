@@ -20,39 +20,29 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
                 queue = (T[]) (new Object[initialCapacity]);
         }
         	//takes in an element of generic type and adds to rear of queue
-        public void enqueue(T element) {
-        	 if (size() == queue.length)
-        	//expand if full
-                 expandCapacity();
-         if (rear == queue.length-1) {
-                 queue[rear] = element;
-                 rear = queue.length;
-         }
-         else {
-                 rear = (rear + 1) % queue.length;
-                 queue[rear - 1] = element;
-         }
-         count++;
- }
-       
+        public void enqueue (T element)
+        	 {
+        	   if (size() == queue.length) 
+        	       expandCapacity();
+        	   
+        	   rear = (rear+1) % queue.length;
+        	   queue[rear] = element;
+        	   
+        	   count++;
+        	  }
 
         public T dequeue() throws EmptyCollectionException
         {
-           if (isEmpty())
+          if (isEmpty())
               throw new EmptyCollectionException ("queue");
-
-           T result = queue[0];
-
-           rear--;
-
-           // shift the elements 
-           for (int scan=0; scan < rear; scan++)
-              queue[scan] = queue[scan+1];
-
-      
-           queue[rear] = null;
-      
-           return result;
+          
+          T result = queue[front];
+          queue[front] = null;
+          front = (front+1) % queue.length;
+          
+          count--;
+          
+          return result;
         }
         
         public T first() throws EmptyCollectionException
@@ -60,12 +50,9 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
             if (isEmpty()) {
             	throw new EmptyCollectionException("attempting to access empty LinearArrayQueue");
             }
-            if (front-1>=0) 
-            	return queue[front - 1];
-            else {
-            	return queue[queue.length - 1];
-            }
+            return queue[front];
          }
+        
         	//returns true if the queue is empty, and false otherwise
         public boolean isEmpty() {
         	if(count==0)    
@@ -101,11 +88,11 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
         		return "The queue is empty";
         		}
         		  
-        		for(int i=0;i<count-1;i++)
+        		for(int i=front;i<rear;i++)
         		{
         		result+=queue[i]+", ";
         		}
-        		result+=queue[count-1]+".";
+        		result+=queue[rear]+".";
         		return result;
         		
         	}
@@ -115,13 +102,13 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
       	  {
       	    T[] larger = (T[])(new Object[queue.length + 20]);
       	    
-      	    for(int scan=0; scan < count; scan++)
+      	    for(int scan=1; scan <= count; scan++)
       	    {
       	      larger[scan] = queue[front];
       	      front=(front+1) % queue.length;
       	    }
       	    
-      	    front = 0;
+      	    front = 1;
       	    rear = count;
       	    queue = larger;
       	  }
