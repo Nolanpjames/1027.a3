@@ -122,24 +122,24 @@ public class WesternCipher {
 		return encoded;
 	}
 	
-	public String decode(String encoded) {
+	public String decode(String input) {
 		
 		for (int i = 0; i < input.length(); i++) {
 			this.encodingQueue.enqueue(input.charAt(i));
 		}
 
 		Character currentChar;
-		Character encodedChar = ' ';
-		String encoded = "";
+		Character decodedChar = ' ';
+		String decoded = "";
 		boolean prevVowel = false;
 		Integer numEncoded = 0;
 	
-		while (!this.encodingQueue.isEmpty()) {
+		while (!this.decodingQueue.isEmpty()) {
 			// Get the current character
-			currentChar = this.encodingQueue.dequeue();
+			currentChar = this.decodingQueue.dequeue();
 			
 			if (currentChar==' ') {
-				encodedChar = ' ';
+				decodedChar = ' ';
 			}
 			else {
 			
@@ -150,22 +150,22 @@ public class WesternCipher {
 						// Convert with second table in assignment instructions
 						switch(currentChar) {
 							case '3':
-								encodedChar = 'A';
+								decodedChar = 'A';
 								break;
 							case '4':
-								encodedChar = 'E';
+								decodedChar = 'E';
 								break;
 							case '5':
-								encodedChar = 'I';
+								decodedChar = 'I';
 								break;
 							case '6':
-								encodedChar = 'O';
+								decodedChar = 'O';
 								break;
 							case '1':
-								encodedChar = 'U';
+								decodedChar = 'U';
 								break;
 							case '2':
-								encodedChar = 'Y';
+								decodedChar = 'Y';
 								break;
 						}
 	
@@ -174,63 +174,63 @@ public class WesternCipher {
 						// Convert with first table in assignment instructions
 						switch(currentChar) {
 							case '1':
-								encodedChar = 'A';
+								decodedChar = 'A';
 								break;
 							case '2':
-								encodedChar = 'E';
+								decodedChar = 'E';
 								break;
 							case '3':
-								encodedChar = 'I';
+								decodedChar = 'I';
 								break;
 							case '4':
-								encodedChar = 'O';
+								decodedChar = 'O';
 								break;
 							case '5':
-								encodedChar = 'U';
+								decodedChar = 'U';
 								break;
 							case '6':
-								encodedChar = 'Y';
+								decodedChar = 'Y';
 								break;
 						}
 					}
 					// Tell the code that the previous character was a vowel
 					prevVowel = true;
-				}
-			}
+				
 			// Case when the current character is not a vowel
-		  else {
+		}	else {
 			char [] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 			// Case when the previous character was a vowel
 			if (prevVowel) {
-				Integer prevEncoded = numtoNum(encodedChar);
+				Integer prevDecoded = numtoNum(decodedChar);
 				// Get the alphabetical position of the character to encode to
-				Integer alphabetPos = (chtoNum(currentChar) + 5 + 2*(encoded.length()) - 2*prevEncoded) % 26;
+				Integer alphabetPos = (chtoNum(currentChar) - 5 - 2*(decoded.length()) + 2*prevDecoded) % 26;
 				
-				encodedChar = alphabet[alphabetPos-1];
+				decodedChar = alphabet[alphabetPos-1];
 				
 
 			// Case when the previous character was not a vowel
 				} else {
 				// Get the alphabetical position of the character to encode to
-					Integer alphabetPos = (chtoNum(currentChar) + 5 + 2*(encoded.length())) % 26;
+					Integer alphabetPos = (chtoNum(currentChar) - 5 - 2*(decoded.length())) % 26;
 
 				// Convert the alphabetical position to the corresponding letter
-					encodedChar = alphabet[alphabetPos-1];
+					decodedChar = alphabet[alphabetPos-1];
 				
 			}
 			// Tell the code that the previous character was not a vowel
 				prevVowel = false;
+		   }
 		}
-
-	
+				
 	// Append the encoded character to the encoded string
-		  encoded += encodedChar;
-		char prevChar = currentChar;
-
-
-		return encoded;
+			decoded += decodedChar;
+			char prevChar = currentChar;
 		}
+
+		return decoded;
+		
 	}
+	
 					
 	// Helper function that checks whether a character is a vowel
 	private boolean isVowel(Character input) {
